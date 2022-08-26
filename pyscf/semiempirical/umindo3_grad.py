@@ -34,6 +34,12 @@ class Gradients(uhf_grad.Gradients):
 Grad = Gradients
 
 
+class TDGradients(uhf.grad.Gradients):
+    # TODO
+    get_hcore = None
+
+
+
 if __name__ == '__main__':
     from pyscf.data.nist import HARTREE2EV
     mol = gto.Mole()

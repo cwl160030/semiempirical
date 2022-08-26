@@ -3,7 +3,10 @@ import copy
 import numpy
 import scipy.linalg
 import pyscf
+from pyscf import gto, scf
 from pyscf import semiempirical
+from pyscf import tdscf
+from pyscf import grad
 
 class KnownValues(unittest.TestCase):
     def test_rmindo(self):
@@ -30,3 +33,52 @@ if __name__ == "__main__":
 
     tdA = umf.TDA().run()
     tdA = umf.TDHF().run()
+
+    # sqm gradients does not work
+    #mf = scf.UHF(mol)
+    mf = semiempirical.UMINDO3(mol)
+    mf.scf()
+    g = mf.nuc_grad_method().kernel()
+    print('\n uhf gradient=', g)
+
+    # TDHF gradients: Notimplemented.
+    td = tdscf.TDA(umf)
+    td.nstates = 3
+    e, z = td.kernel()
+    tdg = td.Gradients()
+    
+    tdg.verbose = 5
+    g1 = tdg.kernel(z[0])
+    print('\nexcited state gradient=',g1)
+
+
+    # ============ pyscf example gradients (working) ==============
+    h2o = gto.Mole()
+    h2o.verbose = 0
+    h2o.output = None#"out_h2o"
+    h2o.atom = [
+        ["O" , (0. , 0.     , 0.)],
+        [1   , (0. , -0.757 , 0.587)],
+        [1   , (0. , 0.757  , 0.587)] ]
+    h2o.basis = {"H": '6-31g',
+                 "O": '6-31g',}
+    h2o.build()
+    mol = h2o
+    method = scf.RHF(mol).run()
+    g = method.Gradients().kernel()
+    print('\n gradient=', g)
+    
+    #mf = semiempirical.UMINDO3(mol)
+    mf = scf.UHF(mol)
+    mf.scf()
+    g = mf.Gradients()
+    print('\n uhf gradient=', g.grad())
+    
+    td = tdscf.TDA(mf)
+    td.nstates = 3
+    e, z = td.kernel()
+    tdg = td.Gradients()
+    
+    tdg.verbose = 5
+    g1 = tdg.kernel(z[0])
+    print('\nexcited state gradient=',g1)
