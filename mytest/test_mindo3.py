@@ -29,28 +29,43 @@ if __name__ == "__main__":
     #unittest.main()
     
     mol = pyscf.M(atom=[(8,(0,0,0)),(1,(1.,0,0))], spin=1)
+    mol = pyscf.M(atom=[(8,(0,0,0)),(8,(1.,0,0))], spin=0)
     umf = semiempirical.UMINDO3(mol).run(conv_tol=1e-6)
 
-    tdA = umf.TDA().run()
-    tdA = umf.TDHF().run()
+    print('\nTDA excited states\n')
+    tdA = umf.TDA().run(nstates=5)
+    
+    print('\nTDHF excited states\n')
+    tdA = umf.TDHF().run(nstates=6)
+
+    print('\n')
 
     # sqm gradients does not work
     #mf = scf.UHF(mol)
     mf = semiempirical.UMINDO3(mol)
     mf.scf()
+
+    print('molecular orbital occ\n', mf.mo_occ)
+    print('molecular orbital energies\n', mf.mo_energy)
+    print('\n start calculating gradients\n')
+
     g = mf.nuc_grad_method().kernel()
-    print('\n uhf gradient=', g)
+    print('\n uhf ground state gradient=\n', g)
 
     # TDHF gradients: Notimplemented.
-    td = tdscf.TDA(umf)
+    #td = tdscf.TDA(umf)
+    td = umf.TDHF() #tdscf.TDHF(umf)
     td.nstates = 3
     e, z = td.kernel()
+
     tdg = td.Gradients()
+    g1 = tdg.kernel()
+
     
+    '''
     tdg.verbose = 5
     g1 = tdg.kernel(z[0])
     print('\nexcited state gradient=',g1)
-
 
     # ============ pyscf example gradients (working) ==============
     h2o = gto.Mole()
@@ -82,3 +97,5 @@ if __name__ == "__main__":
     tdg.verbose = 5
     g1 = tdg.kernel(z[0])
     print('\nexcited state gradient=',g1)
+    # ============ pyscf example gradients (end)     ==============
+    '''

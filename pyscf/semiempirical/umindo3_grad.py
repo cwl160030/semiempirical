@@ -34,9 +34,9 @@ class Gradients(uhf_grad.Gradients):
 Grad = Gradients
 
 
-class TDGradients(uhf.grad.Gradients):
-    # TODO
-    get_hcore = None
+#class TDGradients(uhf.grad.Gradients):
+#    # TODO
+#    get_hcore = None
 
 
 

@@ -290,9 +290,9 @@ class UMINDO3(scf.uhf.UHF):
 
     energy_tot = energy_tot
 
-    def get_veff(self, mol=None, dm=None, dm_last=0, vhf_last=0, hermi=1):
-        
-        raise NotImplementedError
+    #def get_veff(self, mol=None, dm=None, dm_last=0, vhf_last=0, hermi=1):
+    #    
+    #    raise NotImplementedError
 
     def _finalize(self):
         '''Hook for dumping results and clearing up the object.'''
