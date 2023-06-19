@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/home/chance/pyscf_ext/semiempirical/pyscf/semiempirical/__init__.py", line 1, in <module>
+    from .mindo3 import RMINDO3, UMINDO3
+ImportError: attempted relative import with no known parent package

@@ -1,0 +1,15 @@
+<class 'pyscf.semiempirical.nddo.RNDDO'> does not have attributes  zeta_p elements parameters tore method constants zeta_s
+Traceback (most recent call last):
+  File "/home/chance/pyscf_ext/semiempirical/mytest/test_am1.py", line 11, in <module>
+    mf = NDDO(mol,method='AM1').run(conv_tol=1e-6)
+  File "/home/chance/mambaforge/envs/pybase/lib/python3.10/site-packages/pyscf/lib/misc.py", line 512, in run
+    self.kernel(*args)
+  File "/home/chance/mambaforge/envs/pybase/lib/python3.10/site-packages/pyscf/lib/misc.py", line 631, in aliased_fn
+    return getattr(self, fname)(*args, **kwargs)
+  File "/home/chance/mambaforge/envs/pybase/lib/python3.10/site-packages/pyscf/scf/hf.py", line 1643, in scf
+    self.build(self.mol)
+  File "/home/chance/pyscf_ext/semiempirical/pyscf/semiempirical/nddo.py", line 622, in build
+    self._mindo_mol = _make_mindo_mol(self.tore,self.zeta_s,self.zeta_p,mol)
+  File "/home/chance/pyscf_ext/semiempirical/pyscf/semiempirical/nddo.py", line 738, in _make_mindo_mol
+    assert(not mol.has_ecp())
+AttributeError: 'numpy.ndarray' object has no attribute 'has_ecp'
