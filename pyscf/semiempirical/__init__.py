@@ -1,8 +1,6 @@
 from .mindo3 import RMINDO3, UMINDO3
-from .nddo import RNDDO
-#from .am1 import RAM1
-#from .mopac_param import *
-#from .read_param import *
+from .mndo_class import RMNDO
+from .omx_class import ROM2
 
 __version__ = '0.1.0'
 
@@ -12,15 +10,10 @@ def MINDO3(mol):
     else:
         return UMINDO3(mol)
 
-def NDDO(mol,method):
+def MNDO(mol, model):
     if mol.spin == 0:
-        print('__init__',method)
-        return RNDDO(mol,method)
-    else:
-        return NotImplementedError
+        return RMNDO(mol, model)
 
-#def AM1(mol):
-#    if mol.spin == 0:
-#        return RAM1(mol)
-#    else:
-#        return UMINDO3(mol)
+def OMX(mol, model):
+    if mol.spin == 0:
+        return ROM2(mol, model)
