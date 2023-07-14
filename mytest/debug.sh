@@ -16,5 +16,6 @@ source ~/mambaforge/etc/profile.d/mamba.sh
 
 mamba activate pybase
 #python test_mindo3.py
-python test_am1.py
+#python test_am1.py
+python test_om2.py
 mamba deactivate 
