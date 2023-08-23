@@ -6,7 +6,7 @@
 ##SBATCH --error=%J_stderr.txt
 #SBATCH --output=output.txt
 #SBATCH --error=error.txt
-#SBATCH --time=01:00:00
+#SBATCH --time=00:02:00
 #SBATCH --job-name=SEQM
 
 module purge
