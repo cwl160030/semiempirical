@@ -132,6 +132,7 @@ def diatomic_resonance_matrix(ia, ja, zi, zj, xij, rij, params):
        bloc[2,3]  = bloc[2,3]
        bloc[3,3] *= (bpp-bpi)+bpi
 
+       bppbpi = bpp-bpi
     else:
        print('invalid combination of zi and zj')
        exit(-1)

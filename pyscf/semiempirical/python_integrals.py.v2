@@ -21,20 +21,6 @@ from .diatomic_overlap_matrix import *
 from math import sqrt, atan, acos, sin, cos
 write = sys.stdout.write
 
-def rotation_matrix(sij):
-
-    theta = acos(sij[2]) 
-    if abs(sij[0]) < 1e-8: 
-       phi = 0.0
-    else:
-       phi = atan(sij[1]/sij[0])
-
-    T = numpy.array([[1.0, 0.0, 0.0, 0.0], [0.0, cos(theta)*cos(phi), cos(theta)*sin(phi), -sin(theta)], 
-                  [0.0, -sin(phi), cos(phi), 0.0], [0.0, sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta)]])
-    matrix_print_2d(T, 5, "T")
-    return T
-
-
 def matrix_print_2d(array, ncols, title):
 	""" printing a rectangular matrix, ncols columns per batch """
 
@@ -90,12 +76,12 @@ def compute_W_hh(zi, zj, xi, xj, am, ad, aq, dd, qq, tore, old_pxpy_pxpy):
     else: return w
     #print("xi: ", xi, "xj:", xj)
     #print("Xij:", Xij, "rij: ", rij, "sij:", sij)
-   # theta = acos(sij[2]) 
-   # if abs(sij[0]) < 1e-8: 
-   #    phi = 0.0
-   # else:
-   #    phi = atan(sij[1]/sij[0])
-   # print("theta:", theta, "phi:", phi)
+    theta = acos(sij[2]) 
+    if abs(sij[0]) < 1e-8: 
+       phi = 0.0
+    else:
+       phi = atan(sij[1]/sij[0])
+    print("theta:", theta, "phi:", phi)
 
     da = dd[zi] 
     db = dd[zj] 
@@ -194,54 +180,25 @@ def compute_W_hh(zi, zj, xi, xj, am, ad, aq, dd, qq, tore, old_pxpy_pxpy):
     #This approximation is not necessary (Yihan)
     if old_pxpy_pxpy: w[4,4] = 0.5 * (w[2,2] - w[2,5])
 
-    T = rotation_matrix(sij)
+    T = numpy.array([[1.0, 0.0, 0.0, 0.0], [0.0, cos(theta)*cos(phi), cos(theta)*sin(phi), -sin(theta)], 
+                  [0.0, -sin(phi), cos(phi), 0.0], [0.0, sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta)]])
+    matrix_print_2d(T, 5, "T")
 
-    #T = numpy.array([[1.0, 0.0, 0.0, 0.0], [0.0, cos(theta)*cos(phi), cos(theta)*sin(phi), -sin(theta)], 
-    #              [0.0, -sin(phi), cos(phi), 0.0], [0.0, sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta)]])
-    #matrix_print_2d(T, 5, "T")
+    theta = np.pi - theta
+    phi = np.pi + phi
+    Ti = numpy.array([[1.0, 0.0, 0.0, 0.0], [0.0, cos(theta)*cos(phi), cos(theta)*sin(phi), -sin(theta)], 
+                  [0.0, -sin(phi), cos(phi), 0.0], [0.0, sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta)]])
+    matrix_print_2d(Ti, 5, "Ti")
 
-    #theta = np.pi - theta
-    #phi = np.pi + phi
-    #Ti = numpy.array([[1.0, 0.0, 0.0, 0.0], [0.0, cos(theta)*cos(phi), cos(theta)*sin(phi), -sin(theta)], 
-    #              [0.0, -sin(phi), cos(phi), 0.0], [0.0, sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta)]])
-    #matrix_print_2d(Ti, 5, "Ti")
-
-    #if zi == 6 and zj == 6:
-    #    b0 = np.array([[-0.374837775659561, 0.0, 0.0, -0.576732742305692], \
-    #                   [0.0, -0.323432528223110, 0.0, 0.0], \
-    #                   [0.0, 0.0, -0.323432528223110, 0.0], \
-    #                    [0.576732742305692, 0.0, 0.0, 0.877744865908655]])
-    #    matrix_print_2d(b0, 5, "b0")
-    #    b0_rotate = np.einsum('ji,kj,km->im', T, b0, T)
-    #    matrix_print_2d(b0_rotate, 5, "b0_rotate")
-    #elif zi == 8 and zj == 6:
-    #    '''
-    #    b0 = np.array([[-4.31387040770636, 0.0, 0.0, -4.29724336208594], \
-    #                   [0.0, -3.45358312631808, 0.0, 0.0], \
-    #                   [0.0, 0.0, -3.45358312631808, 0.0], \
-    #                   [4.56855505621003, 0.0, 0.0, 4.43123821003492]])
-    #    '''
-    #    b0 = np.array([[-4.31387040770636, 0.0, 0.0,-4.56855505621003], \
-    #                   [0.0, -3.45358312631808, 0.0, 0.0], \
-    #                   [0.0, 0.0, -3.45358312631808, 0.0], \
-    #                   [4.29724336208594, 0.0, 0.0, 4.43123821003492]])
-    #    matrix_print_2d(b0, 5, "b0")
-    #    b0_rotate = np.einsum('ji,kj,km->im', T, b0, T)
-    #    matrix_print_2d(b0_rotate, 5, "b0_rotate")
-    #elif zi == 6 and zj == 8:
-    #    '''
-    #    b0 = np.array([[-4.31387040770636, 0.0, 0.0, 4.56855505621003], \
-    #                   [0.0, -3.45358312631808, 0.0, 0.0], \
-    #                   [0.0, 0.0, -3.45358312631808, 0.0], \
-    #                   [-4.29724336208594, 0.0, 0.0, 4.43123821003492]])
-    #    '''
-    #    b0 = np.array([[-4.31387040770636, 0.0, 0.0, -4.29724336208594], \
-    #                   [0.0, -3.45358312631808, 0.0, 0.0], \
-    #                   [0.0, 0.0, -3.45358312631808, 0.0], \
-    #                   [4.56855505621003, 0.0, 0.0, 4.43123821003492]])
-    #    matrix_print_2d(b0, 5, "b0")
-    #    b0_rotate = np.einsum('ji,kj,km->im', T, b0, T)
-    #    matrix_print_2d(b0_rotate, 5, "b0_rotate")
+    if zi == 6 and zj == 6:
+        b0 = np.array([[-0.374837775659561, 0.0, 0.0, -0.576732742305692], \
+                       [0.0, -0.323432528223110, 0.0, 0.0], \
+                       [0.0, 0.0, -0.323432528223110, 0.0], \
+                       [0.576732742305692, 0.0, 0.0, 0.877744865908655]])
+        matrix_print_2d(b0, 5, "b0")
+        b0_rotate = np.einsum('ij,jk,mk->im', Ti, b0, Ti)
+        matrix_print_2d(b0_rotate, 5, "b0_rotate")
+        exit(-1)
 
     T2 = numpy.zeros((10,10))
     ii = 0
@@ -275,12 +232,12 @@ def compute_W_hl(zi, zj, xi, xj, am, ad, aq, dd, qq, tore):
     sij  = Xij
     if rij > 0.0000001: sij  *= 1/rij
     else: return w
-    #theta = acos(sij[2]) 
-    #if abs(sij[0]) < 1e-8: 
-    #   phi = 0.0
-    #else:
-    #   phi = atan(sij[1]/sij[0])
-    #print("theta:", theta, "phi:", phi)
+    theta = acos(sij[2]) 
+    if abs(sij[0]) < 1e-8: 
+       phi = 0.0
+    else:
+       phi = atan(sij[1]/sij[0])
+    print("theta:", theta, "phi:", phi)
 
     da = dd[zi] 
     qa  = qq[zi]
@@ -341,10 +298,9 @@ def compute_W_hl(zi, zj, xi, xj, am, ad, aq, dd, qq, tore):
             v[3] = phi_b[kb][2] + phi_a[ka][2] 
             w[iwa, iwb] += phi_a[ka][1] * phi_b[kb][1] / sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2] + v[3]*v[3])
 
-    T = rotation_matrix(sij)
-    #T = numpy.array([[1.0, 0.0, 0.0, 0.0], [0.0, cos(theta)*cos(phi), cos(theta)*sin(phi), -sin(theta)], 
-    #              [0.0, -sin(phi), cos(phi), 0.0], [0.0, sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta)]])
-    #matrix_print_2d(T, 5, "T")
+    T = numpy.array([[1.0, 0.0, 0.0, 0.0], [0.0, cos(theta)*cos(phi), cos(theta)*sin(phi), -sin(theta)], 
+                  [0.0, -sin(phi), cos(phi), 0.0], [0.0, sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta)]])
+    matrix_print_2d(T, 5, "T")
 
     T2 = numpy.zeros((10,10))
     ii = 0
@@ -380,12 +336,12 @@ def compute_W_lh(zi, zj, xi, xj, am, ad, aq, dd, qq, tore):
     else: return w
     #print("xi: ", xi, "xj:", xj)
     #print("Xij:", Xij, "rij: ", rij, "sij:", sij)
-    #theta = acos(sij[2]) 
-    #if abs(sij[0]) < 1e-8: 
-    #   phi = 0.0
-    #else:
-    #   phi = atan(sij[1]/sij[0])
-    #print("theta:", theta, "phi:", phi)
+    theta = acos(sij[2]) 
+    if abs(sij[0]) < 1e-8: 
+       phi = 0.0
+    else:
+       phi = atan(sij[1]/sij[0])
+    print("theta:", theta, "phi:", phi)
 
     db = dd[zj] 
     qb  = qq[zj]
@@ -445,10 +401,9 @@ def compute_W_lh(zi, zj, xi, xj, am, ad, aq, dd, qq, tore):
             v[3] = phi_b[kb][2] + phi_a[ka][2] 
             w[iwa, iwb] += phi_a[ka][1] * phi_b[kb][1] / sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2] + v[3]*v[3])
     
-    T = rotation_matrix(sij)
-    #T = numpy.array([[1.0, 0.0, 0.0, 0.0], [0.0, cos(theta)*cos(phi), cos(theta)*sin(phi), -sin(theta)], 
-    #              [0.0, -sin(phi), cos(phi), 0.0], [0.0, sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta)]])
-    #matrix_print_2d(T, 5, "T")
+    T = numpy.array([[1.0, 0.0, 0.0, 0.0], [0.0, cos(theta)*cos(phi), cos(theta)*sin(phi), -sin(theta)], 
+                  [0.0, -sin(phi), cos(phi), 0.0], [0.0, sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta)]])
+    matrix_print_2d(T, 5, "T")
 
     T2 = numpy.zeros((10,10))
     ii = 0
