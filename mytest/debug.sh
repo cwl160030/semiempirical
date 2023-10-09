@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --partition=express
+#SBATCH --partition=batch
 #SBATCH --ntasks=8
 #SBATCH --tasks-per-node=8
 ##SBATCH --output=%J_stdout.txt
@@ -17,6 +17,6 @@ source ~/mambaforge/etc/profile.d/mamba.sh
 mamba activate pybase
 #python test_mindo3.py
 #python test_am1.py
-python am1_energy.py
-#python test_om2.py
+#python am1_energy.py
+python test_om2.py
 mamba deactivate 

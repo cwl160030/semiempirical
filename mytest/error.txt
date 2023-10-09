@@ -1,1 +1,1 @@
-<class 'pyscf.semiempirical.mndo_class.RMNDO'> does not have attributes  params python_integrals
+<class 'pyscf.semiempirical.omx_class.ROM2'> does not have attributes  params python_integrals
